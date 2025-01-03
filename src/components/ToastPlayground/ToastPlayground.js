@@ -1,20 +1,25 @@
 import React from "react";
 
 import Button from "../Button";
-import styles from "./ToastPlayground.module.css";
 import ToastShelf from "../ToastShelf/ToastShelf";
 import { ToastContext } from "../ToastProvider/ToastProvider";
+
+import styles from "./ToastPlayground.module.css";
+
+const VARIANT_OPTIONS = ["notice", "warning", "success", "error"];
 function ToastPlayground() {
-  const {
-    toasts,
-    dismissToast,
-    addToast,
-    message,
-    setMessage,
-    variant,
-    setVariant,
-    VARIANT_OPTIONS,
-  } = React.useContext(ToastContext);
+  const { addToast } = React.useContext(ToastContext);
+
+  const [message, setMessage] = React.useState("");
+  const [variant, setVariant] = React.useState("notice");
+
+  function handleCreateToast(event) {
+    event.preventDefault();
+    addToast(message, variant);
+
+    setMessage("");
+    setVariant(VARIANT_OPTIONS[0]);
+  }
   return (
     <div className={styles.wrapper}>
       <header>
@@ -22,11 +27,9 @@ function ToastPlayground() {
         <h1>Toast Playground</h1>
       </header>
 
-      {toasts && (
-        <ToastShelf toasts={toasts} dismissToast={dismissToast}></ToastShelf>
-      )}
+      <ToastShelf />
 
-      <form className={styles.controlsWrapper} onSubmit={addToast}>
+      <form className={styles.controlsWrapper} onSubmit={handleCreateToast}>
         <div className={styles.row}>
           <label
             htmlFor="message"
